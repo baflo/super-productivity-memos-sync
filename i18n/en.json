@@ -1,0 +1,68 @@
+{
+  "PLUGIN": {
+    "NAME": "Memos",
+    "DESCRIPTION": "Imports Memos with checkboxes as tasks and syncs task notes with Memos."
+  },
+  "CFG": {
+    "FILTER_TAG": "Only memos with this tag (optional)",
+    "FILTER_TAG_HELP": "Without #, e.g. \"work\". Empty: all memos with checkboxes.",
+    "FILTER_SPACE": "Only memos in this space (optional)",
+    "FILTER_SPACE_HELP": "e.g. \"team\" or \"spaces/team\". The Memos URL and access token are set in the plugin settings and the plugin menu.",
+    "INCLUDE_COMPLETED": "Also offer memos whose checkboxes are all checked",
+    "TITLE_MODE": "Task title",
+    "TITLE_MODE_HELP": "How the task title is built from the memo",
+    "TITLE_MODE_CASCADE": "Smart: single open checkbox, else text before the first checkbox, else generic",
+    "TITLE_MODE_FIRST_OPEN": "First open checkbox (+N)",
+    "TITLE_MODE_GENERIC": "Generic (\"Memos tasks from …\")"
+  },
+  "TITLE": {
+    "GENERIC": "Memos tasks from {{date}}"
+  },
+  "DISPLAY": {
+    "MEMO": "Memo",
+    "PROGRESS": "Checkboxes",
+    "PROGRESS_VALUE": "{{done}} of {{total}} checked",
+    "TAGS": "Tags",
+    "CREATED": "Created",
+    "UPDATED": "Updated",
+    "CONTENT": "Content"
+  },
+  "MENU": {
+    "SET_TOKEN": "Memos: Set access token",
+    "SYNC_NOW": "Memos: Sync all task notes now"
+  },
+  "TOKEN": {
+    "DIALOG_TITLE": "Memos access token",
+    "DIALOG_TEXT_UNSET": "Create an access token in Memos (Settings → My account → Access tokens) and paste it here. It is stored on this device only and is not synced.",
+    "DIALOG_TEXT_SET": "A token is stored on this device. Paste a new one to replace it.",
+    "SAVE": "Save",
+    "SAVED": "Memos token saved on this device",
+    "REMOVE": "Remove token",
+    "REMOVED": "Memos token removed"
+  },
+  "DIALOG": {
+    "CANCEL": "Cancel"
+  },
+  "SUBTASKS": {
+    "MENU": "Memos: Checkboxes as subtasks…",
+    "DIALOG_TITLE": "Checkboxes as subtasks",
+    "DIALOG_TEXT": "Selected checkboxes become subtasks. Completing a subtask checks the box in Memos and vice versa.",
+    "CREATE": "Create subtasks",
+    "CREATED": "{{count}} subtask(s) created",
+    "NONE_LEFT": "This memo has no open checkboxes without a subtask",
+    "ONLY_MEMO_TASKS": "Only available for tasks imported from Memos",
+    "CHECKBOX_GONE": "Memos: The checkbox of this subtask no longer exists in the memo"
+  },
+  "SYNC": {
+    "CONFLICT_COMMENT": "Older version, replaced during a sync conflict with Super Productivity:",
+    "CONFLICT_SNACK": "Memos: notes of \"{{title}}\" changed on both sides. The older version is kept as a comment on the memo.",
+    "DISABLED": "Memos: note sync is turned off in the plugin settings",
+    "DONE": "Memos: {{count}} task note(s) synced"
+  },
+  "ERRORS": {
+    "NO_BASE_URL": "Memos: please set the Memos URL in the plugin settings",
+    "BLOCKED_HOST": "Memos: Super Productivity blocks private IP addresses and localhost for plugins. Please use a host name in the Memos URL (e.g. https://memos.home.lan).",
+    "AUTH": "Memos: access denied. Please check the access token (plugin menu \"Memos: Set access token\").",
+    "SYNC_FAILED": "Memos: sync failed – {{msg}}"
+  }
+}

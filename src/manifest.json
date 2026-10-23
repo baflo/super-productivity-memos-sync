@@ -1,0 +1,27 @@
+{
+  "id": "memos",
+  "name": "Memos",
+  "version": "1.0.0",
+  "manifestVersion": 1,
+  "minSupVersion": "19.0.0",
+  "description": "Imports Memos with checkboxes as tasks and syncs task notes with Memos.",
+  "author": "Flo",
+  "type": "issueProvider",
+  "icon": "icon.svg",
+  "iFrame": false,
+  "permissions": [],
+  "hooks": ["taskCreated", "taskUpdate", "taskDelete", "persistedDataChanged"],
+  "jsonSchemaCfg": "config-schema.json",
+  "i18n": {
+    "languages": ["en", "de"]
+  },
+  "issueProvider": {
+    "pollIntervalMs": 300000,
+    "icon": "extension",
+    "humanReadableName": "Memos",
+    "issueStrings": {
+      "singular": "Memo",
+      "plural": "Memos"
+    }
+  }
+}

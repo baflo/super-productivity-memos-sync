@@ -1,0 +1,20 @@
+{
+  "name": "memos",
+  "version": "1.0.0",
+  "description": "Memos (usememos) issue provider and note sync plugin",
+  "type": "module",
+  "scripts": {
+    "build": "node ../scripts/build-with-esbuild.js",
+    "test": "node --test test/*.test.ts",
+    "typecheck": "tsc --noEmit",
+    "lint": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.33",
+    "esbuild": "^0.28.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "@super-productivity/plugin-api": "file:../../plugin-api"
+  }
+}

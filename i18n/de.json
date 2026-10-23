@@ -1,0 +1,68 @@
+{
+  "PLUGIN": {
+    "NAME": "Memos",
+    "DESCRIPTION": "Importiert Memos mit Checkboxen als Tasks und synchronisiert Task-Notizen mit Memos."
+  },
+  "CFG": {
+    "FILTER_TAG": "Nur Memos mit diesem Tag (optional)",
+    "FILTER_TAG_HELP": "Ohne #, z. B. \"arbeit\". Leer: alle Memos mit Checkboxen.",
+    "FILTER_SPACE": "Nur Memos in diesem Space (optional)",
+    "FILTER_SPACE_HELP": "z. B. \"team\" oder \"spaces/team\". Memos-URL und Zugangstoken werden in den Plugin-Einstellungen bzw. im Plugin-Menü gesetzt.",
+    "INCLUDE_COMPLETED": "Auch Memos anbieten, deren Checkboxen alle abgehakt sind",
+    "TITLE_MODE": "Task-Titel",
+    "TITLE_MODE_HELP": "Wie der Task-Titel aus dem Memo gebildet wird",
+    "TITLE_MODE_CASCADE": "Automatisch: einzige offene Checkbox, sonst Text vor der ersten Checkbox, sonst generisch",
+    "TITLE_MODE_FIRST_OPEN": "Erste offene Checkbox (+N)",
+    "TITLE_MODE_GENERIC": "Generisch (\"Memos-Aufgaben vom …\")"
+  },
+  "TITLE": {
+    "GENERIC": "Memos-Aufgaben vom {{date}}"
+  },
+  "DISPLAY": {
+    "MEMO": "Memo",
+    "PROGRESS": "Checkboxen",
+    "PROGRESS_VALUE": "{{done}} von {{total}} abgehakt",
+    "TAGS": "Tags",
+    "CREATED": "Erstellt",
+    "UPDATED": "Geändert",
+    "CONTENT": "Inhalt"
+  },
+  "MENU": {
+    "SET_TOKEN": "Memos: Zugangstoken setzen",
+    "SYNC_NOW": "Memos: Alle Task-Notizen jetzt synchronisieren"
+  },
+  "TOKEN": {
+    "DIALOG_TITLE": "Memos-Zugangstoken",
+    "DIALOG_TEXT_UNSET": "Lege in Memos ein Zugangstoken an (Einstellungen → Mein Konto → Zugangstoken) und füge es hier ein. Es wird nur auf diesem Gerät gespeichert und nicht synchronisiert.",
+    "DIALOG_TEXT_SET": "Auf diesem Gerät ist ein Token gespeichert. Füge ein neues ein, um es zu ersetzen.",
+    "SAVE": "Speichern",
+    "SAVED": "Memos-Token auf diesem Gerät gespeichert",
+    "REMOVE": "Token entfernen",
+    "REMOVED": "Memos-Token entfernt"
+  },
+  "DIALOG": {
+    "CANCEL": "Abbrechen"
+  },
+  "SUBTASKS": {
+    "MENU": "Memos: Checkboxen als Subtasks…",
+    "DIALOG_TITLE": "Checkboxen als Subtasks",
+    "DIALOG_TEXT": "Die ausgewählten Checkboxen werden zu Subtasks. Erledigst du einen Subtask, wird die Checkbox in Memos abgehakt und umgekehrt.",
+    "CREATE": "Subtasks anlegen",
+    "CREATED": "{{count}} Subtask(s) angelegt",
+    "NONE_LEFT": "Dieses Memo hat keine offenen Checkboxen ohne Subtask",
+    "ONLY_MEMO_TASKS": "Nur für Tasks verfügbar, die aus Memos importiert wurden",
+    "CHECKBOX_GONE": "Memos: Die Checkbox zu diesem Subtask gibt es im Memo nicht mehr"
+  },
+  "SYNC": {
+    "CONFLICT_COMMENT": "Ältere Version, ersetzt bei einem Sync-Konflikt mit Super Productivity:",
+    "CONFLICT_SNACK": "Memos: Notizen von \"{{title}}\" wurden auf beiden Seiten geändert. Die ältere Version liegt als Kommentar am Memo.",
+    "DISABLED": "Memos: Der Notiz-Sync ist in den Plugin-Einstellungen ausgeschaltet",
+    "DONE": "Memos: {{count}} Task-Notiz(en) synchronisiert"
+  },
+  "ERRORS": {
+    "NO_BASE_URL": "Memos: Bitte die Memos-URL in den Plugin-Einstellungen setzen",
+    "BLOCKED_HOST": "Memos: Super Productivity blockiert private IP-Adressen und localhost für Plugins. Bitte in der Memos-URL einen Hostnamen verwenden (z. B. https://memos.home.lan).",
+    "AUTH": "Memos: Zugriff verweigert. Bitte das Zugangstoken prüfen (Plugin-Menü \"Memos: Zugangstoken setzen\").",
+    "SYNC_FAILED": "Memos: Synchronisierung fehlgeschlagen – {{msg}}"
+  }
+}
