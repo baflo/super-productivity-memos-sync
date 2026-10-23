@@ -148,8 +148,11 @@ const applyRemote = async (
   await PluginAPI.updateTask(task.id, { notes });
 };
 
-/** SP → Memos for one task. */
-export const pushTask = async (taskId: string): Promise<void> => {
+/**
+ * SP → Memos for one task. `verifyRemote` also checks unchanged tasks, so a
+ * memo deleted in Memos is recreated (used by "sync now").
+ */
+export const pushTask = async (taskId: string, verifyRemote = false): Promise<void> => {
   const ctx = await getFetchClient();
   if (!ctx) {
     return;
@@ -171,7 +174,7 @@ export const pushTask = async (taskId: string): Promise<void> => {
     await createMemo(client, task, settings, content);
     return;
   }
-  if (link.localHash === localHash) {
+  if (link.localHash === localHash && !verifyRemote) {
     return;
   }
 
@@ -184,6 +187,10 @@ export const pushTask = async (taskId: string): Promise<void> => {
       return;
     }
     throw e;
+  }
+  if (link.localHash === localHash) {
+    // Unchanged locally and the memo exists; remote edits are the pull's job.
+    return;
   }
   // Both sides changed (e.g. edited offline): the newer side wins.
   const decision = decidePull({
@@ -325,7 +332,7 @@ export const syncAll = async (): Promise<void> => {
         stripLinkLine(task.notes ?? '').trim() &&
         (await shouldSync(task, ctx.settings))
       ) {
-        await pushTask(task.id);
+        await pushTask(task.id, true);
         count++;
       }
     }

@@ -7,7 +7,7 @@
     "FILTER_TAG": "Only memos with this tag (optional)",
     "FILTER_TAG_HELP": "Without #, e.g. \"work\". Empty: all memos with checkboxes.",
     "FILTER_SPACE": "Only memos in this space (optional)",
-    "FILTER_SPACE_HELP": "e.g. \"team\" or \"spaces/team\". The Memos URL and access token are set in the plugin settings and the plugin menu.",
+    "FILTER_SPACE_HELP": "e.g. \"team\" or \"spaces/team\". The Memos URL and access token are set in the plugin settings (gear icon in Settings → Plugins).",
     "INCLUDE_COMPLETED": "Also offer memos whose checkboxes are all checked",
     "TITLE_MODE": "Task title",
     "TITLE_MODE_HELP": "How the task title is built from the memo",
@@ -26,19 +26,6 @@
     "CREATED": "Created",
     "UPDATED": "Updated",
     "CONTENT": "Content"
-  },
-  "MENU": {
-    "SET_TOKEN": "Memos: Set access token",
-    "SYNC_NOW": "Memos: Sync all task notes now"
-  },
-  "TOKEN": {
-    "DIALOG_TITLE": "Memos access token",
-    "DIALOG_TEXT_UNSET": "Create an access token in Memos (Settings → My account → Access tokens) and paste it here. It is stored on this device only and is not synced.",
-    "DIALOG_TEXT_SET": "A token is stored on this device. Paste a new one to replace it.",
-    "SAVE": "Save",
-    "SAVED": "Memos token saved on this device",
-    "REMOVE": "Remove token",
-    "REMOVED": "Memos token removed"
   },
   "DIALOG": {
     "CANCEL": "Cancel"
@@ -60,9 +47,44 @@
     "DONE": "Memos: {{count}} task note(s) synced"
   },
   "ERRORS": {
-    "NO_BASE_URL": "Memos: please set the Memos URL in the plugin settings",
+    "NO_BASE_URL": "Memos: please set the Memos URL in the plugin settings (gear icon in Settings → Plugins)",
     "BLOCKED_HOST": "Memos: Super Productivity blocks private IP addresses and localhost for plugins. Please use a host name in the Memos URL (e.g. https://memos.home.lan).",
-    "AUTH": "Memos: access denied. Please check the access token (plugin menu \"Memos: Set access token\").",
+    "AUTH": "Memos: access denied. Please check the access token in the plugin settings (gear icon in Settings → Plugins).",
     "SYNC_FAILED": "Memos: sync failed – {{msg}}"
+  },
+  "SETTINGS": {
+    "TITLE": "Memos settings",
+    "SECTION_CONNECTION": "Connection",
+    "SECTION_NOTES": "Note sync",
+    "baseUrl": "Memos URL",
+    "baseUrl_HINT": "e.g. https://memos.home.lan. Use a host name: Super Productivity blocks private IP addresses and localhost for plugins (a host name resolving to a LAN address works). In the web version, Memos must allow CORS.",
+    "token": "Access token",
+    "token_HINT": "Create it in Memos under Settings → My account → Access tokens. Stored on this device only, never synced.",
+    "token_PLACEHOLDER_SET": "Stored on this device. Paste a new one to replace it",
+    "token_PLACEHOLDER_UNSET": "Not set yet",
+    "token_REMOVE": "Remove the stored token from this device",
+    "noteSyncEnabled": "Sync task notes with Memos",
+    "noteSyncEnabled_HINT": "Each task with notes gets its own memo. Tasks imported from Memos and checkbox subtasks are left out.",
+    "syncSpace": "Space for note memos (optional)",
+    "syncSpace_HINT": "e.g. \"superprod\" or \"spaces/superprod\". Empty: no space.",
+    "syncTag": "Tag for note memos (optional)",
+    "syncTag_HINT": "Without #. Memos with this tag are never offered as tasks.",
+    "visibility": "Visibility of note memos",
+    "visibility_PRIVATE": "Private",
+    "visibility_PROTECTED": "Signed-in users",
+    "visibility_PUBLIC": "Public",
+    "visibility_SPACE": "Space members",
+    "pullIntervalMinutes": "Check Memos for changes every … minutes",
+    "pullIntervalMinutes_HINT": "Additionally whenever the app window gets focus.",
+    "onTaskDelete": "When a task with a note memo is deleted",
+    "onTaskDelete_nothing": "Keep the memo",
+    "onTaskDelete_archive": "Archive the memo",
+    "onTaskDelete_delete": "Delete the memo",
+    "syncOtherProviderTasks": "Also sync notes of tasks from other issue providers (GitHub, …)",
+    "spBaseUrl": "Super Productivity URL for task links (optional)",
+    "spBaseUrl_HINT": "The task title in each note memo links to the task. Empty: the address of the web app in use. The desktop app has no web address; set it there if you also use a web instance.",
+    "SAVE": "Save",
+    "SAVE_AND_SYNC": "Save & sync now",
+    "SAVED": "Memos settings saved"
   }
 }

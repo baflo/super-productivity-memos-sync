@@ -150,7 +150,7 @@ export const issueProviderDefinition: IssueProviderPluginDefinition = {
   ],
 
   async getHeaders(): Promise<Record<string, string>> {
-    const token = await getToken(await loadSettings());
+    const token = await getToken();
     return token ? { Authorization: `Bearer ${token}` } : {};
   },
 

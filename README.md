@@ -15,15 +15,25 @@ Requires Super Productivity 19.2 or newer.
 
 1. Build: `npm install && npm run build` in this folder, then zip the content
    of `dist/` and upload it under **Settings → Plugins**.
-2. Plugin settings (gear icon of the plugin):
+2. Plugin settings (gear icon of the plugin in Settings → Plugins). The plugin
+   opens its own dialog, not SP's generated form, so that the token can sit
+   next to the other settings without being synced:
    - **Memos URL**, e.g. `https://memos.home.lan`. Use a host name, because
      Super Productivity blocks `localhost` and private IP addresses for plugin
      providers. A host name that resolves to a LAN address is fine. It does not
      resolve DNS.
-   - Note sync on/off, space, tag, visibility, pull interval, and what happens
-     to the memo when its task is deleted (default: nothing).
-3. Plugin menu → **Memos: Set access token**. Create the token in Memos under
-   Settings → My account → Access tokens. It is stored on this device only.
+   - **Access token**: create it in Memos under Settings → My account → Access
+     tokens. It is stored on this device only, never synced.
+   - Note sync on/off, space, tag, visibility, pull interval, what happens to
+     the memo when its task is deleted (default: nothing), and the Super
+     Productivity URL for task links.
+   - **Save & sync now** runs a full note sync and also recreates memos that
+     were deleted in Memos.
+
+   Settings from plugin 1.0 (SP's form) are taken over automatically; a token
+   entered there moves into device-local storage.
+
+3. The plugin adds no sidebar menu entries.
 4. Issue providers → add **Memos**. Optional per provider: filter tag, filter
    space, title mode.
 
@@ -58,15 +68,15 @@ box in Memos completes the subtask on the next poll.
   task id → memo id.
 - The memo link is added to the task as a link attachment.
 - **Pushes:** debounced, 3 s after a change to the notes or title.
-- **Pulls:** on window focus, at the configured interval, and from the menu
-  entry **Memos: Sync all task notes now**.
+- **Pulls:** on window focus, at the configured interval, and via **Save &
+  sync now** in the plugin settings.
 - **Conflicts** (both sides changed): the newer side wins. The older version is
   kept as a comment on the memo.
 
 ## Network
 
 - The issue provider uses Super Productivity's plugin HTTP helper.
-- The note sync and the checkbox subtasks run from hooks and menus. There, the
+- The note sync and the checkbox subtasks run from hooks and dialogs. There, the
   plugin API only offers `PluginAPI.request` with hosts fixed in the manifest,
   so they use `fetch`.
 - In the desktop app this needs nothing more. In the web version, the Memos

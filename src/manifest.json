@@ -1,7 +1,7 @@
 {
   "id": "memos",
   "name": "Memos",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "manifestVersion": 1,
   "minSupVersion": "19.2.0",
   "description": "Imports Memos with checkboxes as tasks and syncs task notes with Memos.",
@@ -11,7 +11,6 @@
   "iFrame": false,
   "permissions": [],
   "hooks": ["taskCreated", "taskUpdate", "taskDelete", "persistedDataChanged"],
-  "jsonSchemaCfg": "config-schema.json",
   "i18n": {
     "languages": ["en", "de"]
   },

@@ -7,7 +7,7 @@
     "FILTER_TAG": "Nur Memos mit diesem Tag (optional)",
     "FILTER_TAG_HELP": "Ohne #, z. B. \"arbeit\". Leer: alle Memos mit Checkboxen.",
     "FILTER_SPACE": "Nur Memos in diesem Space (optional)",
-    "FILTER_SPACE_HELP": "z. B. \"team\" oder \"spaces/team\". Memos-URL und Zugangstoken werden in den Plugin-Einstellungen bzw. im Plugin-Menü gesetzt.",
+    "FILTER_SPACE_HELP": "z. B. \"team\" oder \"spaces/team\". Memos-URL und Zugangstoken setzt du in den Plugin-Einstellungen (Zahnrad unter Einstellungen → Plugins).",
     "INCLUDE_COMPLETED": "Auch Memos anbieten, deren Checkboxen alle abgehakt sind",
     "TITLE_MODE": "Task-Titel",
     "TITLE_MODE_HELP": "Wie der Task-Titel aus dem Memo gebildet wird",
@@ -26,19 +26,6 @@
     "CREATED": "Erstellt",
     "UPDATED": "Geändert",
     "CONTENT": "Inhalt"
-  },
-  "MENU": {
-    "SET_TOKEN": "Memos: Zugangstoken setzen",
-    "SYNC_NOW": "Memos: Alle Task-Notizen jetzt synchronisieren"
-  },
-  "TOKEN": {
-    "DIALOG_TITLE": "Memos-Zugangstoken",
-    "DIALOG_TEXT_UNSET": "Lege in Memos ein Zugangstoken an (Einstellungen → Mein Konto → Zugangstoken) und füge es hier ein. Es wird nur auf diesem Gerät gespeichert und nicht synchronisiert.",
-    "DIALOG_TEXT_SET": "Auf diesem Gerät ist ein Token gespeichert. Füge ein neues ein, um es zu ersetzen.",
-    "SAVE": "Speichern",
-    "SAVED": "Memos-Token auf diesem Gerät gespeichert",
-    "REMOVE": "Token entfernen",
-    "REMOVED": "Memos-Token entfernt"
   },
   "DIALOG": {
     "CANCEL": "Abbrechen"
@@ -60,9 +47,44 @@
     "DONE": "Memos: {{count}} Task-Notiz(en) synchronisiert"
   },
   "ERRORS": {
-    "NO_BASE_URL": "Memos: Bitte die Memos-URL in den Plugin-Einstellungen setzen",
+    "NO_BASE_URL": "Memos: Bitte die Memos-URL in den Plugin-Einstellungen setzen (Zahnrad unter Einstellungen → Plugins)",
     "BLOCKED_HOST": "Memos: Super Productivity blockiert private IP-Adressen und localhost für Plugins. Bitte in der Memos-URL einen Hostnamen verwenden (z. B. https://memos.home.lan).",
-    "AUTH": "Memos: Zugriff verweigert. Bitte das Zugangstoken prüfen (Plugin-Menü \"Memos: Zugangstoken setzen\").",
+    "AUTH": "Memos: Zugriff verweigert. Bitte das Zugangstoken in den Plugin-Einstellungen prüfen (Zahnrad unter Einstellungen → Plugins).",
     "SYNC_FAILED": "Memos: Synchronisierung fehlgeschlagen – {{msg}}"
+  },
+  "SETTINGS": {
+    "TITLE": "Memos-Einstellungen",
+    "SECTION_CONNECTION": "Verbindung",
+    "SECTION_NOTES": "Notiz-Sync",
+    "baseUrl": "Memos-URL",
+    "baseUrl_HINT": "z. B. https://memos.home.lan. Bitte einen Hostnamen verwenden: Super Productivity blockiert für Plugins private IP-Adressen und localhost (ein Hostname, der auf eine LAN-Adresse zeigt, funktioniert). In der Web-Version muss Memos CORS erlauben.",
+    "token": "Zugangstoken",
+    "token_HINT": "In Memos unter Einstellungen → Mein Konto → Zugangstoken anlegen. Wird nur auf diesem Gerät gespeichert, nie synchronisiert.",
+    "token_PLACEHOLDER_SET": "Auf diesem Gerät gespeichert. Neues einfügen, um es zu ersetzen",
+    "token_PLACEHOLDER_UNSET": "Noch nicht gesetzt",
+    "token_REMOVE": "Gespeichertes Token von diesem Gerät entfernen",
+    "noteSyncEnabled": "Task-Notizen mit Memos synchronisieren",
+    "noteSyncEnabled_HINT": "Jeder Task mit Notiz bekommt ein eigenes Memo. Aus Memos importierte Tasks und Checkbox-Subtasks sind ausgenommen.",
+    "syncSpace": "Space für Notiz-Memos (optional)",
+    "syncSpace_HINT": "z. B. \"superprod\" oder \"spaces/superprod\". Leer: kein Space.",
+    "syncTag": "Tag für Notiz-Memos (optional)",
+    "syncTag_HINT": "Ohne #. Memos mit diesem Tag werden nie als Aufgaben angeboten.",
+    "visibility": "Sichtbarkeit der Notiz-Memos",
+    "visibility_PRIVATE": "Privat",
+    "visibility_PROTECTED": "Angemeldete Nutzer",
+    "visibility_PUBLIC": "Öffentlich",
+    "visibility_SPACE": "Space-Mitglieder",
+    "pullIntervalMinutes": "Memos alle … Minuten auf Änderungen prüfen",
+    "pullIntervalMinutes_HINT": "Zusätzlich immer, wenn das App-Fenster den Fokus bekommt.",
+    "onTaskDelete": "Wenn ein Task mit Notiz-Memo gelöscht wird",
+    "onTaskDelete_nothing": "Memo behalten",
+    "onTaskDelete_archive": "Memo archivieren",
+    "onTaskDelete_delete": "Memo löschen",
+    "syncOtherProviderTasks": "Auch Notizen von Tasks anderer Issue-Provider (GitHub, …) synchronisieren",
+    "spBaseUrl": "Super-Productivity-URL für Task-Links (optional)",
+    "spBaseUrl_HINT": "Der Task-Titel in jedem Notiz-Memo verlinkt auf den Task. Leer: Adresse der gerade genutzten Web-App. Die Desktop-App hat keine Web-Adresse; dort setzen, wenn du zusätzlich eine Web-Instanz nutzt.",
+    "SAVE": "Speichern",
+    "SAVE_AND_SYNC": "Speichern & jetzt synchronisieren",
+    "SAVED": "Memos-Einstellungen gespeichert"
   }
 }

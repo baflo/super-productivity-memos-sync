@@ -15,12 +15,12 @@ import {
   schedulePush,
   syncAll,
 } from './note-sync';
-import { loadSettings, TOKEN_SECRET_KEY } from './settings';
+import { loadSettings } from './settings';
+import { openSettingsDialog } from './settings-dialog';
 import { invalidate } from './store';
 
 declare const PluginAPI: PluginAPIType;
 
-const TOKEN_INPUT_ID = 'memos-token-input';
 const PULL_TICK_MS = 60 * 1000;
 const STARTUP_PULL_DELAY_MS = 10 * 1000;
 const FOCUS_PULL_MIN_AGE_MS = 60 * 1000;
@@ -60,58 +60,11 @@ PluginAPI.registerHook(PluginAPI.Hooks.TASK_DELETE, ({ taskId }) => {
 // Another device changed the synced links.
 PluginAPI.registerHook(PluginAPI.Hooks.PERSISTED_DATA_CHANGED, () => invalidate());
 
-// --- Menu & context menu ---------------------------------------------------
+// --- Settings & context menu -----------------------------------------------
 
-const openTokenDialog = async (): Promise<void> => {
-  const hasToken = !!(await PluginAPI.getSecret(TOKEN_SECRET_KEY));
-  const readInput = (): string =>
-    (document.getElementById(TOKEN_INPUT_ID) as HTMLInputElement | null)?.value.trim() ??
-    '';
-  await PluginAPI.openDialog({
-    title: t('TOKEN.DIALOG_TITLE'),
-    htmlContent:
-      `<p>${t(hasToken ? 'TOKEN.DIALOG_TEXT_SET' : 'TOKEN.DIALOG_TEXT_UNSET')}</p>` +
-      `<input type="password" id="${TOKEN_INPUT_ID}" autocomplete="off" style="width:100%;box-sizing:border-box">`,
-    buttons: [
-      { label: t('DIALOG.CANCEL') },
-      ...(hasToken
-        ? [
-            {
-              label: t('TOKEN.REMOVE'),
-              color: 'warn' as const,
-              onClick: async () => {
-                await PluginAPI.deleteSecret(TOKEN_SECRET_KEY);
-                PluginAPI.showSnack({ msg: t('TOKEN.REMOVED'), type: 'SUCCESS' });
-              },
-            },
-          ]
-        : []),
-      {
-        label: t('TOKEN.SAVE'),
-        color: 'primary' as const,
-        raised: true,
-        onClick: async () => {
-          const token = readInput();
-          if (token) {
-            await PluginAPI.setSecret(TOKEN_SECRET_KEY, token);
-            PluginAPI.showSnack({ msg: t('TOKEN.SAVED'), type: 'SUCCESS' });
-          }
-        },
-      },
-    ],
-  });
-};
-
-PluginAPI.registerMenuEntry({
-  label: t('MENU.SET_TOKEN'),
-  icon: 'key',
-  onClick: safe(openTokenDialog),
-});
-
-PluginAPI.registerMenuEntry({
-  label: t('MENU.SYNC_NOW'),
-  icon: 'sync',
-  onClick: safe(syncAll),
+// Replaces SP's schema form behind the gear icon in the plugin list.
+PluginAPI.registerConfigHandler(() => {
+  safe(openSettingsDialog)(safe(syncAll));
 });
 
 PluginAPI.registerTaskContextMenuEntry({
