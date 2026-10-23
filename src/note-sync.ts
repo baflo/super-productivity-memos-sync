@@ -59,18 +59,26 @@ const linkFrom = (memo: Memo, localHash: string, prev?: NoteLink): NoteLink => (
   ...(prev?.linkInNotes ? { linkInNotes: true } : {}),
 });
 
-/** Shows the memo at the task: as link attachment, else as last line of the notes. */
+const MEMO_ATTACHMENT_PREFIX = 'memos-';
+
+/**
+ * Shows the memo at the task: as link attachment, else as last line of the
+ * notes. Replaces the plugin's earlier memo attachments (e.g. of a memo that
+ * was deleted in Memos and recreated), so there is only ever one.
+ */
 const attachMemoLink = async (task: Task, url: string, link: NoteLink): Promise<void> => {
-  const attachments = (task.attachments ?? []) as { path?: string }[];
-  if (attachments.some((a) => a.path === url)) {
+  const attachments = (task.attachments ?? []) as { id?: string; path?: string }[];
+  const own = attachments.filter((a) => a.id?.startsWith(MEMO_ATTACHMENT_PREFIX));
+  if (own.length === 1 && own[0].path === url) {
     return;
   }
+  const others = attachments.filter((a) => !a.id?.startsWith(MEMO_ATTACHMENT_PREFIX));
   try {
     await PluginAPI.updateTask(task.id, {
       attachments: [
-        ...attachments,
+        ...others,
         {
-          id: `memos-${link.memo}`,
+          id: `${MEMO_ATTACHMENT_PREFIX}${link.memo}`,
           type: 'LINK',
           path: url,
           title: 'Memo',
@@ -187,6 +195,10 @@ export const pushTask = async (taskId: string, verifyRemote = false): Promise<vo
       return;
     }
     throw e;
+  }
+  if (verifyRemote && !link.linkInNotes) {
+    // Memo exists: make sure the task shows exactly one, current memo link.
+    await attachMemoLink(task, memoUrl(settings.baseUrl, link.memo), link);
   }
   if (link.localHash === localHash) {
     // Unchanged locally and the memo exists; remote edits are the pull's job.
