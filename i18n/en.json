@@ -62,7 +62,7 @@
     "token_HINT": "Create it in Memos under Settings → My account → Access tokens. Stored on this device only, never synced.",
     "token_PLACEHOLDER_SET": "Stored on this device. Paste a new one to replace it",
     "token_PLACEHOLDER_UNSET": "Not set yet",
-    "token_REMOVE": "Remove the stored token from this device",
+    "token_REMOVE": "Remove",
     "noteSyncEnabled": "Sync task notes with Memos",
     "noteSyncEnabled_HINT": "Each task with notes gets its own memo. Tasks imported from Memos and checkbox subtasks are left out.",
     "syncSpace": "Space for note memos (optional)",
@@ -85,6 +85,7 @@
     "spBaseUrl_HINT": "The task title in each note memo links to the task. Empty: the address of the web app in use. The desktop app has no web address; set it there if you also use a web instance.",
     "SAVE": "Save",
     "SAVE_AND_SYNC": "Save & sync now",
-    "SAVED": "Memos settings saved"
+    "SAVED": "Memos settings saved",
+    "token_REMOVED": "Token removed from this device"
   }
 }

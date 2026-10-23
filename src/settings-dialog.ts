@@ -83,11 +83,8 @@ const readForm = (): Partial<Settings> => ({
 const save = async (): Promise<void> => {
   const settings = readForm();
   const token = byId<HTMLInputElement>(TOKEN_ID)?.value.trim() ?? '';
-  const removeToken = !!byId<HTMLInputElement>(TOKEN_REMOVE_ID)?.checked;
   await saveSettings(settings);
-  if (removeToken) {
-    await PluginAPI.deleteSecret(TOKEN_SECRET_KEY);
-  } else if (token) {
+  if (token) {
     await PluginAPI.setSecret(TOKEN_SECRET_KEY, token);
   }
   PluginAPI.showSnack({
@@ -99,6 +96,34 @@ const save = async (): Promise<void> => {
   });
 };
 
+/**
+ * Waits for an element of the just-opened dialog. SP's sanitizer strips
+ * inline handlers from dialog HTML, so plugin.js attaches them itself.
+ */
+const whenRendered = (
+  id: string,
+  attach: (el: HTMLElement) => void,
+  framesLeft = 60,
+): void => {
+  const el = byId(id);
+  if (el) {
+    attach(el);
+  } else if (framesLeft > 0) {
+    requestAnimationFrame(() => whenRendered(id, attach, framesLeft - 1));
+  }
+};
+
+/** Deletes the token right away (an action, not a setting to be saved). */
+const removeToken = async (): Promise<void> => {
+  await PluginAPI.deleteSecret(TOKEN_SECRET_KEY);
+  const input = byId<HTMLInputElement>(TOKEN_ID);
+  if (input) {
+    input.placeholder = t('SETTINGS.token_PLACEHOLDER_UNSET');
+  }
+  byId(TOKEN_REMOVE_ID)?.remove();
+  PluginAPI.showSnack({ msg: t('SETTINGS.token_REMOVED'), type: 'SUCCESS' });
+};
+
 export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> => {
   const stored = await loadStoredSettings();
   const s: Settings = { ...DEFAULT_SETTINGS, ...stored };
@@ -108,15 +133,16 @@ export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> =
   const htmlContent =
     section(t('SETTINGS.SECTION_CONNECTION')) +
     textField('baseUrl', s.baseUrl, 'url', 'https://memos.example.com') +
-    `<label style="display:block;margin:12px 0">${esc(t('SETTINGS.token'))}` +
+    `<label style="display:block;margin:12px 0" for="${TOKEN_ID}">${esc(t('SETTINGS.token'))}</label>` +
+    `<div style="display:flex;gap:8px;align-items:stretch">` +
     `<input id="${TOKEN_ID}" type="password" autocomplete="off" placeholder="${esc(
       t(hasToken ? 'SETTINGS.token_PLACEHOLDER_SET' : 'SETTINGS.token_PLACEHOLDER_UNSET'),
-    )}" style="${fieldStyle}"></label>` +
-    hint(t('SETTINGS.token_HINT')) +
+    )}" style="flex:1;min-width:0;box-sizing:border-box">` +
     (hasToken
-      ? `<label style="display:flex;gap:8px;align-items:center;margin:8px 0 0">` +
-        `<input id="${TOKEN_REMOVE_ID}" type="checkbox"> ${esc(t('SETTINGS.token_REMOVE'))}</label>`
+      ? `<button type="button" id="${TOKEN_REMOVE_ID}" style="padding:0 12px;cursor:pointer">${esc(t('SETTINGS.token_REMOVE'))}</button>`
       : '') +
+    `</div>` +
+    hint(t('SETTINGS.token_HINT')) +
     section(t('SETTINGS.SECTION_NOTES')) +
     checkbox('noteSyncEnabled', s.noteSyncEnabled) +
     textField('syncSpace', s.syncSpace, 'text', 'superprod') +
@@ -127,7 +153,7 @@ export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> =
     checkbox('syncOtherProviderTasks', s.syncOtherProviderTasks, false) +
     textField('spBaseUrl', s.spBaseUrl, 'url', currentAppUrl());
 
-  await PluginAPI.openDialog({
+  const dialogClosed = PluginAPI.openDialog({
     title: t('SETTINGS.TITLE'),
     htmlContent,
     buttons: [
@@ -143,6 +169,10 @@ export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> =
       { label: t('SETTINGS.SAVE'), color: 'primary', raised: true, onClick: save },
     ],
   });
+  if (hasToken) {
+    whenRendered(TOKEN_REMOVE_ID, (btn) => btn.addEventListener('click', removeToken));
+  }
+  await dialogClosed;
   if (syncAfterClose) {
     onSyncNow();
   }

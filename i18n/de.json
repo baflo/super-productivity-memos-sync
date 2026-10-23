@@ -62,7 +62,7 @@
     "token_HINT": "In Memos unter Einstellungen → Mein Konto → Zugangstoken anlegen. Wird nur auf diesem Gerät gespeichert, nie synchronisiert.",
     "token_PLACEHOLDER_SET": "Auf diesem Gerät gespeichert. Neues einfügen, um es zu ersetzen",
     "token_PLACEHOLDER_UNSET": "Noch nicht gesetzt",
-    "token_REMOVE": "Gespeichertes Token von diesem Gerät entfernen",
+    "token_REMOVE": "Entfernen",
     "noteSyncEnabled": "Task-Notizen mit Memos synchronisieren",
     "noteSyncEnabled_HINT": "Jeder Task mit Notiz bekommt ein eigenes Memo. Aus Memos importierte Tasks und Checkbox-Subtasks sind ausgenommen.",
     "syncSpace": "Space für Notiz-Memos (optional)",
@@ -85,6 +85,7 @@
     "spBaseUrl_HINT": "Der Task-Titel in jedem Notiz-Memo verlinkt auf den Task. Leer: Adresse der gerade genutzten Web-App. Die Desktop-App hat keine Web-Adresse; dort setzen, wenn du zusätzlich eine Web-Instanz nutzt.",
     "SAVE": "Speichern",
     "SAVE_AND_SYNC": "Speichern & jetzt synchronisieren",
-    "SAVED": "Memos-Einstellungen gespeichert"
+    "SAVED": "Memos-Einstellungen gespeichert",
+    "token_REMOVED": "Token von diesem Gerät entfernt"
   }
 }
