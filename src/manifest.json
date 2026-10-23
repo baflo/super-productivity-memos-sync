@@ -3,7 +3,7 @@
   "name": "Memos",
   "version": "1.0.0",
   "manifestVersion": 1,
-  "minSupVersion": "19.0.0",
+  "minSupVersion": "19.2.0",
   "description": "Imports Memos with checkboxes as tasks and syncs task notes with Memos.",
   "author": "Flo",
   "type": "issueProvider",

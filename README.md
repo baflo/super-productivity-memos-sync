@@ -11,6 +11,8 @@ Connects Super Productivity with [Memos](https://usememos.com) (self-hosted or c
 
 ## Setup
 
+Requires Super Productivity 19.2 or newer.
+
 1. Build: `npm install && npm run build` in this folder, then zip the content
    of `dist/` and upload it under **Settings → Plugins**.
 2. Plugin settings (gear icon of the plugin):
