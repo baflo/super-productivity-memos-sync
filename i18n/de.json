@@ -86,6 +86,11 @@
     "SAVE": "Speichern",
     "SAVE_AND_SYNC": "Speichern & jetzt synchronisieren",
     "SAVED": "Memos-Einstellungen gespeichert",
-    "token_REMOVED": "Token von diesem Gerät entfernt"
+    "token_REMOVED": "Token von diesem Gerät entfernt",
+    "syncToken": "Token auf alle meine Geräte synchronisieren",
+    "syncToken_HINT": "Das Token wird dann mit deinem Super-Productivity-Sync übertragen. Verschlüsselt ist es nur, wenn für diesen Sync die Verschlüsselung eingeschaltet ist (SuperSync, WebDAV, Dropbox …); das kann das Plugin nicht prüfen. In SP-Backups und -Exporten steht es unverschlüsselt.",
+    "token_PLACEHOLDER_SYNCED": "Von einem anderen Gerät synchronisiert. Neues einfügen, um es zu ersetzen",
+    "token_REMOVE_ALL": "Entfernen (alle Geräte)",
+    "token_REMOVED_ALL": "Token von allen Geräten entfernt"
   }
 }

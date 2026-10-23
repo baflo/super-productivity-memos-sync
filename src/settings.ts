@@ -31,6 +31,10 @@ export interface Settings {
   pullIntervalMinutes: number;
   onTaskDelete: DeleteBehavior;
   syncOtherProviderTasks: boolean;
+  /** Opt-in: keep a copy of the token in the synced settings. */
+  syncToken: boolean;
+  /** The synced token copy; only used while `syncToken` is on. */
+  syncedToken?: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -43,6 +47,7 @@ export const DEFAULT_SETTINGS: Settings = {
   pullIntervalMinutes: 10,
   onTaskDelete: 'nothing',
   syncOtherProviderTasks: true,
+  syncToken: false,
 };
 
 let cached: Settings = { ...DEFAULT_SETTINGS };
@@ -105,6 +110,7 @@ export const loadSettings = async (): Promise<Settings> => {
       (merged as unknown as Record<string, unknown>)[key] = value;
     }
   }
+  merged.syncedToken = raw.syncedToken || undefined;
   merged.baseUrl = normalizeBaseUrl(merged.baseUrl);
   merged.spBaseUrl = merged.spBaseUrl || currentAppUrl();
   merged.syncSpace = normalizeSpace(merged.syncSpace);
@@ -117,8 +123,23 @@ export const loadSettings = async (): Promise<Settings> => {
   return merged;
 };
 
-export const getToken = (): Promise<string | null> =>
-  PluginAPI.getSecret(TOKEN_SECRET_KEY);
+export type TokenSource = 'local' | 'synced' | null;
+
+const syncedTokenOf = (settings: Settings): string | undefined =>
+  settings.syncToken ? settings.syncedToken : undefined;
+
+/** Where the token in use comes from: this device first, then the synced copy. */
+export const getTokenSource = async (): Promise<TokenSource> => {
+  if (await PluginAPI.getSecret(TOKEN_SECRET_KEY)) {
+    return 'local';
+  }
+  return syncedTokenOf(await loadSettings()) ? 'synced' : null;
+};
+
+export const getToken = async (): Promise<string | null> =>
+  (await PluginAPI.getSecret(TOKEN_SECRET_KEY)) ||
+  syncedTokenOf(await loadSettings()) ||
+  null;
 
 /** Client for hook-driven code; null when no Memos URL is set. */
 export const getFetchClient = async (): Promise<{

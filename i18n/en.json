@@ -86,6 +86,11 @@
     "SAVE": "Save",
     "SAVE_AND_SYNC": "Save & sync now",
     "SAVED": "Memos settings saved",
-    "token_REMOVED": "Token removed from this device"
+    "token_REMOVED": "Token removed from this device",
+    "syncToken": "Sync the token to all my devices",
+    "syncToken_HINT": "The token then travels with your Super Productivity sync. It is only encrypted if encryption is turned on for that sync (SuperSync, WebDAV, Dropbox …), which the plugin cannot check. It is included unencrypted in SP backups and exports.",
+    "token_PLACEHOLDER_SYNCED": "Synced from another device. Paste a new one to replace it",
+    "token_REMOVE_ALL": "Remove (all devices)",
+    "token_REMOVED_ALL": "Token removed from all devices"
   }
 }

@@ -17,13 +17,20 @@ Requires Super Productivity 19.2 or newer.
    of `dist/` and upload it under **Settings → Plugins**.
 2. Plugin settings (gear icon of the plugin in Settings → Plugins). The plugin
    opens its own dialog, not SP's generated form, so that the token can sit
-   next to the other settings without being synced:
+   next to the other settings in device-local storage:
    - **Memos URL**, e.g. `https://memos.home.lan`. Use a host name, because
      Super Productivity blocks `localhost` and private IP addresses for plugin
      providers. A host name that resolves to a LAN address is fine. It does not
      resolve DNS.
    - **Access token**: create it in Memos under Settings → My account → Access
-     tokens. It is stored on this device only, never synced.
+     tokens. By default it is stored on this device only, never synced.
+     **"Sync the token to all my devices"** (off by default) adds a copy to the
+     synced plugin settings, so other devices need no token of their own.
+     That copy travels with your SP sync and is only encrypted if encryption
+     is on for that sync; plugins cannot check this (SP strips the sync
+     settings from what plugins see). It is included unencrypted in SP
+     backups and exports. **Remove** deletes the token from this device, and
+     also the synced copy if there is one.
    - Note sync on/off, space, tag, visibility, pull interval, what happens to
      the memo when its task is deleted (default: nothing), and the Super
      Productivity URL for task links.

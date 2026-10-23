@@ -7,7 +7,7 @@ import { isBlockedByHost, normalizeBaseUrl } from './memos-client';
 import {
   currentAppUrl,
   DEFAULT_SETTINGS,
-  getToken,
+  getTokenSource,
   loadStoredSettings,
   saveSettings,
   TOKEN_SECRET_KEY,
@@ -83,10 +83,22 @@ const readForm = (): Partial<Settings> => ({
 const save = async (): Promise<void> => {
   const settings = readForm();
   const token = byId<HTMLInputElement>(TOKEN_ID)?.value.trim() ?? '';
-  await saveSettings(settings);
+  const syncToken = readChecked('syncToken');
+  const stored = await loadStoredSettings();
+  const local = await PluginAPI.getSecret(TOKEN_SECRET_KEY);
   if (token) {
     await PluginAPI.setSecret(TOKEN_SECRET_KEY, token);
+  } else if (!syncToken && !local && stored.syncedToken) {
+    // Sync switched off on a device that only had the synced copy: keep it working.
+    await PluginAPI.setSecret(TOKEN_SECRET_KEY, stored.syncedToken);
   }
+  await saveSettings({
+    ...settings,
+    syncToken,
+    syncedToken: syncToken
+      ? token || local || stored.syncedToken || undefined
+      : undefined,
+  });
   PluginAPI.showSnack({
     msg:
       settings.baseUrl && isBlockedByHost(settings.baseUrl)
@@ -113,21 +125,33 @@ const whenRendered = (
   }
 };
 
-/** Deletes the token right away (an action, not a setting to be saved). */
+/**
+ * Deletes the token right away (an action, not a setting to be saved), together
+ * with a synced copy: left behind, that copy would still be used.
+ */
 const removeToken = async (): Promise<void> => {
   await PluginAPI.deleteSecret(TOKEN_SECRET_KEY);
+  const stored = await loadStoredSettings();
+  if (stored.syncedToken) {
+    await saveSettings({ ...stored, syncedToken: undefined });
+  }
   const input = byId<HTMLInputElement>(TOKEN_ID);
   if (input) {
     input.placeholder = t('SETTINGS.token_PLACEHOLDER_UNSET');
   }
   byId(TOKEN_REMOVE_ID)?.remove();
-  PluginAPI.showSnack({ msg: t('SETTINGS.token_REMOVED'), type: 'SUCCESS' });
+  PluginAPI.showSnack({
+    msg: t(stored.syncedToken ? 'SETTINGS.token_REMOVED_ALL' : 'SETTINGS.token_REMOVED'),
+    type: 'SUCCESS',
+  });
 };
 
 export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> => {
   const stored = await loadStoredSettings();
   const s: Settings = { ...DEFAULT_SETTINGS, ...stored };
-  const hasToken = !!(await getToken());
+  const tokenSource = await getTokenSource();
+  const hasToken = !!tokenSource;
+  const hasSyncedCopy = !!stored.syncedToken;
   let syncAfterClose = false;
 
   const htmlContent =
@@ -136,13 +160,20 @@ export const openSettingsDialog = async (onSyncNow: () => void): Promise<void> =
     `<label style="display:block;margin:12px 0" for="${TOKEN_ID}">${esc(t('SETTINGS.token'))}</label>` +
     `<div style="display:flex;gap:8px;align-items:stretch">` +
     `<input id="${TOKEN_ID}" type="password" autocomplete="off" placeholder="${esc(
-      t(hasToken ? 'SETTINGS.token_PLACEHOLDER_SET' : 'SETTINGS.token_PLACEHOLDER_UNSET'),
+      t(
+        tokenSource === 'local'
+          ? 'SETTINGS.token_PLACEHOLDER_SET'
+          : tokenSource === 'synced'
+            ? 'SETTINGS.token_PLACEHOLDER_SYNCED'
+            : 'SETTINGS.token_PLACEHOLDER_UNSET',
+      ),
     )}" style="flex:1;min-width:0;box-sizing:border-box">` +
     (hasToken
-      ? `<button type="button" id="${TOKEN_REMOVE_ID}" style="padding:0 12px;cursor:pointer">${esc(t('SETTINGS.token_REMOVE'))}</button>`
+      ? `<button type="button" id="${TOKEN_REMOVE_ID}" style="padding:0 12px;cursor:pointer">${esc(t(hasSyncedCopy ? 'SETTINGS.token_REMOVE_ALL' : 'SETTINGS.token_REMOVE'))}</button>`
       : '') +
     `</div>` +
     hint(t('SETTINGS.token_HINT')) +
+    checkbox('syncToken', s.syncToken) +
     section(t('SETTINGS.SECTION_NOTES')) +
     checkbox('noteSyncEnabled', s.noteSyncEnabled) +
     textField('syncSpace', s.syncSpace, 'text', 'superprod') +
