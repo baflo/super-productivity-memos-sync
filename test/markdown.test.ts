@@ -10,6 +10,7 @@ import {
   setCheckbox,
   stripFooter,
   stripLinkLine,
+  taskDeepLink,
   toPlainText,
 } from '../src/markdown.ts';
 
@@ -155,4 +156,24 @@ test('link line round trip and compose ignores it', () => {
 test('hash is stable and content-sensitive', () => {
   assert.equal(hash('abc'), hash('abc'));
   assert.notEqual(hash('abc'), hash('abd'));
+});
+
+test('task deep link and linked footer title', () => {
+  assert.equal(
+    taskDeepLink('https://sp.example.com/', { id: 'T-1', projectId: 'INBOX_PROJECT' }),
+    'https://sp.example.com/#/project/INBOX_PROJECT/tasks?focusItem=T-1&isFromSearch=true',
+  );
+  assert.equal(
+    taskDeepLink('https://sp.example.com/#/tag/TODAY/tasks', {
+      id: 'x',
+      projectId: null,
+    }),
+    'https://sp.example.com/#/tag/TODAY/tasks?focusItem=x&isFromSearch=true',
+  );
+  assert.equal(taskDeepLink('', { id: 'x' }), '');
+
+  const url = taskDeepLink('https://sp.example.com', { id: 'T-1', projectId: 'P' });
+  const content = composeMemoContent('Notiz', 'Plan [A]', 'superprod', url);
+  assert.equal(content, `Notiz\n\n---\n*SP-Task: [Plan \\[A\\]](${url})* #superprod`);
+  assert.equal(stripFooter(content), 'Notiz');
 });

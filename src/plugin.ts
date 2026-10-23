@@ -45,7 +45,8 @@ PluginAPI.registerHook(PluginAPI.Hooks.TASK_UPDATE, ({ taskId, task, changes }) 
   if ('isDone' in changes) {
     safe(onSubtaskDoneChange)(task);
   }
-  if ('notes' in changes || 'title' in changes) {
+  // projectId: the task link in the memo points into the task's project.
+  if ('notes' in changes || 'title' in changes || 'projectId' in changes) {
     safe(markLocalEdit)(task);
     schedulePush(taskId);
   }

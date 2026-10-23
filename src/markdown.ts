@@ -175,16 +175,38 @@ const FOOTER_RE = /\n*---\n\*SP-Task: [^\n]*\*[^\n]*\s*$/;
 const LINK_LINE_RE = /\n*\[↗ Memo\]\([^)]*\)\s*$/;
 
 const escapeFooterTitle = (title: string): string =>
-  title.replace(/[*\n]/g, ' ').replace(/\s+/g, ' ').trim();
+  title.replace(/[*\n]/g, ' ').replace(/\s+/g, ' ').trim().replace(/[[\]]/g, '\\$&');
+
+/**
+ * Link that opens the task's list in Super Productivity, scrolled to and
+ * highlighted at the task (the `focusItem` route param SP's search uses).
+ * There is no task-only route yet. Empty without a base URL.
+ */
+export const taskDeepLink = (
+  spBaseUrl: string,
+  task: { id: string; projectId?: string | null },
+): string => {
+  const base = spBaseUrl.trim().replace(/#.*$/, '').replace(/\/+$/, '');
+  if (!base) {
+    return '';
+  }
+  const list = task.projectId
+    ? `project/${encodeURIComponent(task.projectId)}/tasks`
+    : 'tag/TODAY/tasks';
+  return `${base}/#/${list}?focusItem=${encodeURIComponent(task.id)}&isFromSearch=true`;
+};
 
 export const composeMemoContent = (
   notes: string,
   taskTitle: string,
   tag?: string,
+  taskUrl?: string,
 ): string => {
   const body = stripLinkLine(notes).trimEnd();
   const tagStr = tag ? ` #${tag.replace(/^#/, '')}` : '';
-  return `${body}\n\n---\n*SP-Task: ${escapeFooterTitle(taskTitle)}*${tagStr}`;
+  const title = escapeFooterTitle(taskTitle);
+  const titleStr = taskUrl ? `[${title}](${taskUrl})` : title;
+  return `${body}\n\n---\n*SP-Task: ${titleStr}*${tagStr}`;
 };
 
 export const stripFooter = (content: string): string =>

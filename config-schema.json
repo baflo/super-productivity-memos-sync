@@ -8,6 +8,11 @@
       "title": "Memos URL",
       "description": "Address of your Memos instance, e.g. https://memos.home.lan or https://usememos.com/… Use a host name: Super Productivity blocks private IP addresses (192.168.x.x, 10.x.x.x …) and localhost for plugin providers. A host name that resolves to a LAN address works. In the web version, the Memos server must allow CORS. The access token is set via the plugin menu entry \"Memos: Set access token\" (stored on this device only)."
     },
+    "spBaseUrl": {
+      "type": "string",
+      "title": "Super Productivity URL for task links (optional)",
+      "description": "The task title in each note memo links back to the task in this Super Productivity instance, e.g. https://superprod.example.com. Empty: the address of the web app you are using. The desktop app has no web address, so set it there if you also use a web instance."
+    },
     "noteSyncEnabled": {
       "type": "boolean",
       "title": "Sync task notes with Memos",

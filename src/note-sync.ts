@@ -8,6 +8,7 @@ import {
   hash,
   stripFooter,
   stripLinkLine,
+  taskDeepLink,
 } from './markdown';
 import type { Memo, MemosClient } from './memos-client';
 import { celString, getStatus, memoUid, memoUrl } from './memos-client';
@@ -27,11 +28,18 @@ const PULL_OVERLAP_MS = 5 * 60 * 1000;
 const pending = new Map<string, ReturnType<typeof setTimeout>>();
 let pullRunning = false;
 
-const composeFor = (notes: string, title: string, settings: Settings): string =>
-  composeMemoContent(notes, title, settings.syncTag);
+type SyncedTask = Pick<Task, 'id' | 'notes' | 'title' | 'projectId'>;
 
-const localHashOf = (task: Pick<Task, 'notes' | 'title'>, settings: Settings): string =>
-  hash(composeFor(task.notes ?? '', task.title, settings));
+const composeFor = (task: SyncedTask, settings: Settings): string =>
+  composeMemoContent(
+    task.notes ?? '',
+    task.title,
+    settings.syncTag,
+    taskDeepLink(settings.spBaseUrl, task),
+  );
+
+const localHashOf = (task: SyncedTask, settings: Settings): string =>
+  hash(composeFor(task, settings));
 
 const shouldSync = async (task: Task, settings: Settings): Promise<boolean> => {
   if (!settings.noteSyncEnabled || task.issueType === PROVIDER_KEY) {
@@ -135,7 +143,7 @@ const applyRemote = async (
   // Store the link first: the taskUpdate hook of this update must see the new hash.
   await setNoteLink(
     task.id,
-    linkFrom(memo, localHashOf({ notes, title: task.title }, settings), link),
+    linkFrom(memo, localHashOf({ ...task, notes }, settings), link),
   );
   await PluginAPI.updateTask(task.id, { notes });
 };
@@ -157,7 +165,7 @@ export const pushTask = async (taskId: string): Promise<void> => {
   if (!notes) {
     return;
   }
-  const content = composeFor(task.notes ?? '', task.title, settings);
+  const content = composeFor(task, settings);
   const localHash = hash(content);
   if (!link) {
     await createMemo(client, task, settings, content);

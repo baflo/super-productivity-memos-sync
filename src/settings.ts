@@ -21,6 +21,8 @@ export type DeleteBehavior = 'nothing' | 'archive' | 'delete';
 
 export interface Settings {
   baseUrl: string;
+  /** Super Productivity address for the task link in note memos. */
+  spBaseUrl: string;
   /** Fallback only; synced with the config. Prefer the secret. */
   token: string;
   noteSyncEnabled: boolean;
@@ -34,6 +36,7 @@ export interface Settings {
 
 const DEFAULTS: Settings = {
   baseUrl: '',
+  spBaseUrl: '',
   token: '',
   noteSyncEnabled: true,
   syncSpace: '',
@@ -45,6 +48,18 @@ const DEFAULTS: Settings = {
 };
 
 let cached: Settings = { ...DEFAULTS };
+
+/** The web app's own address; '' in the desktop app (file://), which has no shareable URL. */
+const currentAppUrl = (): string => {
+  try {
+    const { protocol, origin, pathname } = window.location;
+    return protocol === 'http:' || protocol === 'https:'
+      ? `${origin}${pathname.replace(/index\.html$/, '')}`
+      : '';
+  } catch {
+    return '';
+  }
+};
 
 export const getCachedSettings = (): Settings => cached;
 
@@ -59,6 +74,7 @@ export const loadSettings = async (): Promise<Settings> => {
     }
   }
   merged.baseUrl = normalizeBaseUrl(merged.baseUrl);
+  merged.spBaseUrl = merged.spBaseUrl || currentAppUrl();
   merged.syncSpace = normalizeSpace(merged.syncSpace);
   merged.syncTag = normalizeTag(merged.syncTag);
   merged.pullIntervalMinutes = Math.max(

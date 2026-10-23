@@ -48,7 +48,14 @@ box in Memos completes the subtask on the next poll.
 ## Note sync details
 
 - Each memo ends with a footer `--- *SP-Task: <title>* #<tag>`, which is
-  removed again when the memo is pulled into the notes.
+  removed again when the memo is pulled into the notes. The title links to
+  the task in Super Productivity: `<SP URL>/#/project/<id>/tasks?focusItem=<task>`
+  opens the task's list, scrolls to the task and highlights it (there is no
+  task-only route yet). The SP URL is the web app you are using, or the
+  "Super Productivity URL" setting. Set it when you also use the desktop app,
+  which has no web address, so all devices write the same link. The link is
+  not used to match memos and tasks; that happens via a synced mapping
+  task id → memo id.
 - The memo link is added to the task as a link attachment.
 - **Pushes:** debounced, 3 s after a change to the notes or title.
 - **Pulls:** on window focus, at the configured interval, and from the menu
