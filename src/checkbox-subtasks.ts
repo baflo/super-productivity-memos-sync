@@ -1,7 +1,7 @@
 // "Checkbox → subtask": turns chosen checkboxes of an imported memo into
 // subtasks and keeps their done state in sync with the checkbox, both ways.
 import type { PluginAPI as PluginAPIType, Task } from '@super-productivity/plugin-api';
-import { t } from '../../issue-provider-kit';
+import { t } from './kit';
 import { findCheckbox, parseCheckboxes, setCheckbox, toPlainText } from './markdown';
 import type { Memo } from './memos-client';
 import { memoUid } from './memos-client';

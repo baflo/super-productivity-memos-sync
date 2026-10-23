@@ -7,7 +7,7 @@ import type {
   PluginIssue,
   PluginSearchResult,
 } from '@super-productivity/plugin-api';
-import { asConfig, canConnect, t, textMapping } from '../../issue-provider-kit';
+import { asConfig, canConnect, t, textMapping } from './kit';
 import { buildTitle, parseCheckboxes } from './markdown';
 import type { TitleMode } from './markdown';
 import {

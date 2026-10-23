@@ -1,20 +1,20 @@
 {
-  "name": "memos",
-  "version": "1.0.0",
-  "description": "Memos (usememos) issue provider and note sync plugin",
+  "name": "super-productivity-memos-sync",
+  "version": "1.1.0",
+  "private": true,
+  "description": "Super Productivity plugin: Memos (usememos) issue provider and note sync",
+  "license": "MIT",
+  "repository": "github:baflo/super-productivity-memos-sync",
   "type": "module",
   "scripts": {
-    "build": "node ../scripts/build-with-esbuild.js",
+    "build": "node scripts/build.mjs",
+    "package": "node scripts/build.mjs --zip",
     "test": "node --test test/*.test.ts",
-    "typecheck": "tsc --noEmit",
-    "lint": "tsc --noEmit"
+    "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/node": "^22.15.33",
     "esbuild": "^0.28.1",
     "typescript": "^5.8.3"
-  },
-  "dependencies": {
-    "@super-productivity/plugin-api": "file:../../plugin-api"
   }
 }

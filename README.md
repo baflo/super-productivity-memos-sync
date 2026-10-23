@@ -1,4 +1,6 @@
-# Memos plugin
+# Super Productivity × Memos
+
+A [Super Productivity](https://super-productivity.com) plugin.
 
 Connects Super Productivity with [Memos](https://usememos.com) (self-hosted or cloud).
 
@@ -13,8 +15,9 @@ Connects Super Productivity with [Memos](https://usememos.com) (self-hosted or c
 
 Requires Super Productivity 19.2 or newer.
 
-1. Build: `npm install && npm run build` in this folder, then zip the content
-   of `dist/` and upload it under **Settings → Plugins**.
+1. Install: download `plugin.zip` from the
+   [latest release](https://github.com/baflo/super-productivity-memos-sync/releases)
+   (or build it, see below) and upload it under **Settings → Plugins**.
 2. Plugin settings (gear icon of the plugin in Settings → Plugins). The plugin
    opens its own dialog, not SP's generated form, so that the token can sit
    next to the other settings in device-local storage:
@@ -91,8 +94,23 @@ box in Memos completes the subtask on the next poll.
 
 ## Development
 
+Requires Node 22 or newer (the tests run TypeScript via type stripping).
+
 ```bash
+npm ci
 npm test          # unit tests (node --test)
 npm run typecheck
-npm run build
+npm run build     # dist/
+npm run package   # dist/ + plugin.zip
 ```
+
+The plugin API types come from Super Productivity's source, not from npm (the
+published `@super-productivity/plugin-api` package is outdated); see
+[`types/plugin-api/README.md`](types/plugin-api/README.md).
+
+Releases: push a tag `v<version>` (matching `src/manifest.json`); CI attaches
+`plugin.zip` to a GitHub release.
+
+## License
+
+MIT, see [LICENSE](LICENSE).

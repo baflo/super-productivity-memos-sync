@@ -1,5 +1,5 @@
 import type { PluginAPI as PluginAPIType } from '@super-productivity/plugin-api';
-import { registerIssueProvider, t } from '../../issue-provider-kit';
+import { registerIssueProvider, t } from './kit';
 import {
   forgetSubtasks,
   onSubtaskDoneChange,

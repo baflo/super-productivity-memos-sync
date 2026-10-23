@@ -2,7 +2,7 @@
 // (registerConfigHandler). It replaces SP's schema form so the token can be
 // edited next to the other settings while staying in device-local storage.
 import type { PluginAPI as PluginAPIType } from '@super-productivity/plugin-api';
-import { t } from '../../issue-provider-kit';
+import { t } from './kit';
 import { isBlockedByHost, normalizeBaseUrl } from './memos-client';
 import {
   currentAppUrl,

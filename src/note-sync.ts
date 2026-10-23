@@ -1,7 +1,7 @@
 // Note sync: task notes ↔ one memo per task. Tasks imported from Memos and
 // checkbox subtasks are left out, so no memo is mirrored twice.
 import type { PluginAPI as PluginAPIType, Task } from '@super-productivity/plugin-api';
-import { t } from '../../issue-provider-kit';
+import { t } from './kit';
 import {
   appendLinkLine,
   composeMemoContent,
