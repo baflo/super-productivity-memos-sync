@@ -15,7 +15,7 @@ Connects Super Productivity with [Memos](https://usememos.com) (self-hosted or c
 
 Requires Super Productivity 19.2 or newer.
 
-1. Install: download `plugin.zip` from the
+1. Install: download `superprod-plugin-memos-sync-v<version>.zip` from the
    [latest release](https://github.com/baflo/super-productivity-memos-sync/releases)
    (or build it, see below) and upload it under **Settings → Plugins**.
 2. Plugin settings (gear icon of the plugin in Settings → Plugins). The plugin
@@ -110,8 +110,9 @@ The plugin API types come from Super Productivity's source, not from npm (the
 published `@super-productivity/plugin-api` package is outdated); see
 [`types/plugin-api/README.md`](types/plugin-api/README.md).
 
-Releases: push a tag `v<version>` (matching `src/manifest.json`); CI attaches
-`plugin.zip` to a GitHub release.
+Releases: push a tag `v<version>` (it must match the version in
+`src/manifest.json`); CI creates a GitHub release with
+`superprod-plugin-memos-sync-v<version>.zip`.
 
 ## License
 
