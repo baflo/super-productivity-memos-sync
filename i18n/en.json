@@ -48,7 +48,7 @@
   },
   "ERRORS": {
     "NO_BASE_URL": "Memos: please set the Memos URL in the plugin settings (gear icon in Settings → Plugins)",
-    "BLOCKED_HOST": "Memos: Super Productivity blocks private IP addresses and localhost for plugins. Please use a host name in the Memos URL (e.g. https://memos.home.lan).",
+    "BLOCKED_HOST": "Memos: Super Productivity blocks localhost and private IP addresses for plugin issue providers. Please use a host name in the Memos URL (e.g. https://memos.localhost or https://memos.home.lan).",
     "AUTH": "Memos: access denied. Please check the access token in the plugin settings (gear icon in Settings → Plugins).",
     "SYNC_FAILED": "Memos: sync failed – {{msg}}"
   },
@@ -86,6 +86,7 @@
     "SAVE": "Save",
     "SAVE_AND_SYNC": "Save & sync now",
     "SAVED": "Memos settings saved",
+    "SAVED_BLOCKED_HOST": "Settings saved. The note sync works with this URL, but the issue provider does not: Super Productivity blocks localhost and private IP addresses for it. Use a host name instead (e.g. https://memos.localhost).",
     "token_REMOVED": "Token removed from this device",
     "syncToken": "Sync the token to all my devices",
     "syncToken_HINT": "The token then travels with your Super Productivity sync. It is only encrypted if encryption is turned on for that sync (SuperSync, WebDAV, Dropbox …), which the plugin cannot check. It is included unencrypted in SP backups and exports.",

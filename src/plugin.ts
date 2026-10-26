@@ -6,7 +6,6 @@ import {
   openCheckboxDialog,
 } from './checkbox-subtasks';
 import { issueProviderDefinition } from './issue-provider';
-import { isBlockedByHost } from './memos-client';
 import {
   markLocalEdit,
   onTaskDeleted,
@@ -99,10 +98,6 @@ PluginAPI.onWindowFocusChange?.((isFocused) => {
 
 setTimeout(
   safe(async () => {
-    const settings = await loadSettings();
-    if (settings.baseUrl && isBlockedByHost(settings.baseUrl)) {
-      PluginAPI.showSnack({ msg: t('ERRORS.BLOCKED_HOST'), type: 'WARNING' });
-    }
     await pullIfDue(0);
   }),
   STARTUP_PULL_DELAY_MS,

@@ -1,6 +1,6 @@
 {
   "name": "super-productivity-memos-sync",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "private": true,
   "description": "Super Productivity plugin: Memos (usememos) issue provider and note sync",
   "license": "MIT",

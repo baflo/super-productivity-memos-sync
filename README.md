@@ -21,10 +21,12 @@ Requires Super Productivity 19.2 or newer.
 2. Plugin settings (gear icon of the plugin in Settings → Plugins). The plugin
    opens its own dialog, not SP's generated form, so that the token can sit
    next to the other settings in device-local storage:
-   - **Memos URL**, e.g. `https://memos.home.lan`. Use a host name, because
-     Super Productivity blocks `localhost` and private IP addresses for plugin
-     providers. A host name that resolves to a LAN address is fine. It does not
-     resolve DNS.
+   - **Memos URL**, e.g. `https://memos.home.lan`. The note sync works with
+     any URL. The issue provider needs a host name: Super Productivity blocks
+     `localhost` and private IP addresses for plugin issue providers (by the
+     literal host, without resolving DNS, so a host name that resolves to a LAN
+     address is fine). For a local install, `https://memos.localhost` works in
+     Chromium without a hosts entry.
    - **Access token**: create it in Memos under Settings → My account → Access
      tokens. By default it is stored on this device only, never synced.
      **"Sync the token to all my devices"** (off by default) adds a copy to the

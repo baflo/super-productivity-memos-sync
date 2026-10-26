@@ -48,7 +48,7 @@
   },
   "ERRORS": {
     "NO_BASE_URL": "Memos: Bitte die Memos-URL in den Plugin-Einstellungen setzen (Zahnrad unter Einstellungen → Plugins)",
-    "BLOCKED_HOST": "Memos: Super Productivity blockiert private IP-Adressen und localhost für Plugins. Bitte in der Memos-URL einen Hostnamen verwenden (z. B. https://memos.home.lan).",
+    "BLOCKED_HOST": "Memos: Super Productivity blockiert localhost und private IP-Adressen für Issue Provider von Plugins. Bitte in der Memos-URL einen Hostnamen verwenden (z. B. https://memos.localhost oder https://memos.home.lan).",
     "AUTH": "Memos: Zugriff verweigert. Bitte das Zugangstoken in den Plugin-Einstellungen prüfen (Zahnrad unter Einstellungen → Plugins).",
     "SYNC_FAILED": "Memos: Synchronisierung fehlgeschlagen – {{msg}}"
   },
@@ -86,6 +86,7 @@
     "SAVE": "Speichern",
     "SAVE_AND_SYNC": "Speichern & jetzt synchronisieren",
     "SAVED": "Memos-Einstellungen gespeichert",
+    "SAVED_BLOCKED_HOST": "Einstellungen gespeichert. Der Notiz-Sync funktioniert mit dieser URL, der Issue Provider aber nicht: Super Productivity blockiert dafür localhost und private IP-Adressen. Stattdessen einen Hostnamen verwenden (z. B. https://memos.localhost).",
     "token_REMOVED": "Token von diesem Gerät entfernt",
     "syncToken": "Token auf alle meine Geräte synchronisieren",
     "syncToken_HINT": "Das Token wird dann mit deinem Super-Productivity-Sync übertragen. Verschlüsselt ist es nur, wenn für diesen Sync die Verschlüsselung eingeschaltet ist (SuperSync, WebDAV, Dropbox …); das kann das Plugin nicht prüfen. In SP-Backups und -Exporten steht es unverschlüsselt.",

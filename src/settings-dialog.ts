@@ -99,12 +99,11 @@ const save = async (): Promise<void> => {
       ? token || local || stored.syncedToken || undefined
       : undefined,
   });
+  // Only the issue provider is affected; the note sync works with any host.
+  const blocked = !!settings.baseUrl && isBlockedByHost(settings.baseUrl);
   PluginAPI.showSnack({
-    msg:
-      settings.baseUrl && isBlockedByHost(settings.baseUrl)
-        ? t('ERRORS.BLOCKED_HOST')
-        : t('SETTINGS.SAVED'),
-    type: settings.baseUrl && isBlockedByHost(settings.baseUrl) ? 'WARNING' : 'SUCCESS',
+    msg: blocked ? t('SETTINGS.SAVED_BLOCKED_HOST') : t('SETTINGS.SAVED'),
+    type: blocked ? 'WARNING' : 'SUCCESS',
   });
 };
 
