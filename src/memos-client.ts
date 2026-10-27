@@ -17,10 +17,25 @@ export interface Memo {
   tags?: string[];
   snippet?: string;
   space?: string;
+  attachments?: MemoAttachment[];
   property?: {
     hasTaskList?: boolean;
     hasIncompleteTasks?: boolean;
   };
+}
+
+export interface MemoAttachment {
+  /** `attachments/{id}` */
+  name: string;
+  filename: string;
+  type: string;
+  /** `memos/{uid}` the attachment is bound to, if any. */
+  memo?: string | null;
+}
+
+/** Reference to an existing attachment, for a memo's attachment set. */
+export interface AttachmentRef {
+  name: string;
 }
 
 interface ListMemosResponse {
@@ -30,6 +45,8 @@ interface ListMemosResponse {
 
 export interface Transport {
   request<T>(method: string, url: string, body?: unknown): Promise<T>;
+  /** Binary GET (attachment files); only the fetch transport has it. */
+  download?(url: string): Promise<Blob>;
 }
 
 export class MemosHttpError extends Error {
@@ -47,6 +64,16 @@ export const fromPluginHttp = (http: PluginHttp): Transport => ({
 });
 
 export const fetchTransport = (token: string | null): Transport => ({
+  async download(url: string): Promise<Blob> {
+    const res = await fetch(url, {
+      headers: token ? { Authorization: `Bearer ${token}` } : {},
+    });
+    if (!res.ok) {
+      throw new MemosHttpError(res.status, `Memos GET ${res.status}: ${url}`);
+    }
+    return res.blob();
+  },
+
   async request<T>(method: string, url: string, body?: unknown): Promise<T> {
     const res = await fetch(url, {
       method,
@@ -95,6 +122,10 @@ export const memoUid = (memo: Pick<Memo, 'name'>): string =>
 export const memoUrl = (baseUrl: string, uid: string): string =>
   `${normalizeBaseUrl(baseUrl)}/memos/${uid}`;
 
+/** File URL of an attachment, as Memos serves it (needs auth for private memos). */
+export const attachmentUrl = (baseUrl: string, id: string, filename: string): string =>
+  `${normalizeBaseUrl(baseUrl)}/file/attachments/${encodeURIComponent(id)}/${encodeURIComponent(filename)}`;
+
 /**
  * Mirrors the hostname check of SP's plugin http helper, which refuses
  * localhost and private IP literals (it does not resolve DNS). Returns true
@@ -121,11 +152,13 @@ export const celAnd = (...terms: (string | false | undefined | null)[]): string 
   terms.filter((t): t is string => !!t).join(' && ');
 
 export class MemosClient {
+  readonly baseUrl: string;
   private readonly api: string;
   private readonly transport: Transport;
 
   constructor(baseUrl: string, transport: Transport) {
-    this.api = `${normalizeBaseUrl(baseUrl)}/api/v1`;
+    this.baseUrl = normalizeBaseUrl(baseUrl);
+    this.api = `${this.baseUrl}/api/v1`;
     this.transport = transport;
   }
 
@@ -161,14 +194,17 @@ export class MemosClient {
     content: string;
     visibility?: Visibility;
     space?: string;
+    attachments?: AttachmentRef[];
   }): Promise<Memo> {
     return this.transport.request<Memo>('POST', `${this.api}/memos`, memo);
   }
 
   updateMemo(
     uid: string,
-    patch: Partial<Pick<Memo, 'content' | 'state'>>,
+    patch: Partial<Pick<Memo, 'content' | 'state'>> & { attachments?: AttachmentRef[] },
   ): Promise<Memo> {
+    // With `attachments` in the mask, Memos replaces the memo's attachment set
+    // and deletes the attachments left out.
     // `update_time` without a value makes the server stamp the current time, as
     // the Memos web UI does; a bare `content` mask leaves updateTime untouched.
     const fields = Object.keys(patch);
@@ -187,6 +223,35 @@ export class MemosClient {
       'DELETE',
       `${this.api}/memos/${encodeURIComponent(uid)}`,
     );
+  }
+
+  /** Creates an unlinked attachment with the given id (`content` is base64). */
+  createAttachment(attachment: {
+    id: string;
+    filename: string;
+    type: string;
+    content: string;
+  }): Promise<MemoAttachment> {
+    const { id, ...body } = attachment;
+    return this.transport.request<MemoAttachment>(
+      'POST',
+      `${this.api}/attachments?attachmentId=${encodeURIComponent(id)}`,
+      body,
+    );
+  }
+
+  getAttachment(id: string): Promise<MemoAttachment> {
+    return this.transport.request<MemoAttachment>(
+      'GET',
+      `${this.api}/attachments/${encodeURIComponent(id)}`,
+    );
+  }
+
+  downloadAttachment(id: string, filename: string): Promise<Blob> {
+    if (!this.transport.download) {
+      throw new Error('This transport cannot download files');
+    }
+    return this.transport.download(attachmentUrl(this.baseUrl, id, filename));
   }
 
   createComment(uid: string, content: string): Promise<Memo> {

@@ -16,6 +16,10 @@ export interface NoteLink {
   localEditedAt?: number;
   /** Set when the link is kept in the notes instead of an attachment. */
   linkInNotes?: boolean;
+  /** Attachment ids of the note images synced with the memo. */
+  images?: string[];
+  /** SP image id → attachment id, where the image belongs to another memo too. */
+  imageCopies?: Record<string, string>;
 }
 
 export interface SubtaskLink {

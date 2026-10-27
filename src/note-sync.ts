@@ -12,6 +12,12 @@ import {
 } from './markdown';
 import type { Memo, MemosClient } from './memos-client';
 import { celString, getStatus, memoUid, memoUrl } from './memos-client';
+import {
+  fetchMissingImages,
+  hasNewImages,
+  imagesFromMemo,
+  imagesToMemo,
+} from './note-images';
 import { getFetchClient, loadSettings, PROVIDER_KEY } from './settings';
 import type { Settings } from './settings';
 import { getNoteLink, getNoteLinks, getSubtaskLinks, setNoteLink } from './store';
@@ -51,12 +57,19 @@ const shouldSync = async (task: Task, settings: Settings): Promise<boolean> => {
   return !(await getSubtaskLinks())[task.id];
 };
 
-const linkFrom = (memo: Memo, localHash: string, prev?: NoteLink): NoteLink => ({
+const linkFrom = (
+  memo: Memo,
+  localHash: string,
+  { images, imageCopies }: Pick<NoteLink, 'images' | 'imageCopies'>,
+  prev?: NoteLink,
+): NoteLink => ({
   memo: memoUid(memo),
   syncedHash: hash(memo.content),
   localHash,
   memoUpdateTime: memo.updateTime,
   ...(prev?.linkInNotes ? { linkInNotes: true } : {}),
+  ...(images?.length ? { images } : {}),
+  ...(imageCopies && Object.keys(imageCopies).length ? { imageCopies } : {}),
 });
 
 const MEMO_ATTACHMENT_PREFIX = 'memos-';
@@ -94,9 +107,19 @@ const attachMemoLink = async (task: Task, url: string, link: NoteLink): Promise<
   }
 };
 
-const notesFromMemo = (memo: Memo, link: NoteLink, url: string): string => {
-  const notes = stripFooter(memo.content);
-  return link.linkInNotes ? appendLinkLine(notes, url) : notes;
+const notesFromMemo = async (
+  client: MemosClient,
+  memo: Memo,
+  link: NoteLink,
+  url: string,
+): Promise<{ notes: string; images: string[] }> => {
+  const { notes, images } = await imagesFromMemo(
+    client,
+    stripFooter(memo.content),
+    memo,
+    link,
+  );
+  return { notes: link.linkInNotes ? appendLinkLine(notes, url) : notes, images };
 };
 
 const keepAsComment = async (
@@ -116,14 +139,16 @@ const createMemo = async (
   client: MemosClient,
   task: Task,
   settings: Settings,
-  content: string,
+  composed: string,
 ): Promise<void> => {
+  const { content, attachments, ...sync } = await imagesToMemo(client, composed);
   const memo = await client.createMemo({
     content,
     visibility: settings.visibility,
     ...(settings.syncSpace ? { space: settings.syncSpace } : {}),
+    ...(attachments.length ? { attachments } : {}),
   });
-  const link = linkFrom(memo, hash(content));
+  const link = linkFrom(memo, hash(composed), sync);
   await setNoteLink(task.id, link);
   await attachMemoLink(task, memoUrl(settings.baseUrl, link.memo), link);
 };
@@ -147,11 +172,21 @@ const applyRemote = async (
     await keepAsComment(client, link.memo, task.notes ?? '');
     notifyConflict(task);
   }
-  const notes = notesFromMemo(memo, link, memoUrl(settings.baseUrl, link.memo));
+  const { notes, images } = await notesFromMemo(
+    client,
+    memo,
+    link,
+    memoUrl(settings.baseUrl, link.memo),
+  );
   // Store the link first: the taskUpdate hook of this update must see the new hash.
   await setNoteLink(
     task.id,
-    linkFrom(memo, localHashOf({ ...task, notes }, settings), link),
+    linkFrom(
+      memo,
+      localHashOf({ ...task, notes }, settings),
+      { images, imageCopies: link.imageCopies },
+      link,
+    ),
   );
   await PluginAPI.updateTask(task.id, { notes });
 };
@@ -196,9 +231,13 @@ export const pushTask = async (taskId: string, verifyRemote = false): Promise<vo
     }
     throw e;
   }
-  if (verifyRemote && !link.linkInNotes) {
-    // Memo exists: make sure the task shows exactly one, current memo link.
-    await attachMemoLink(task, memoUrl(settings.baseUrl, link.memo), link);
+  if (verifyRemote) {
+    if (!link.linkInNotes) {
+      // Memo exists: make sure the task shows exactly one, current memo link.
+      await attachMemoLink(task, memoUrl(settings.baseUrl, link.memo), link);
+    }
+    // SP's own sync carries the notes but not their images.
+    await fetchMissingImages(client, notes, remote, link);
   }
   if (link.localHash === localHash) {
     // Unchanged locally and the memo exists; remote edits are the pull's job.
@@ -221,8 +260,21 @@ export const pushTask = async (taskId: string, verifyRemote = false): Promise<vo
     await keepAsComment(client, link.memo, stripFooter(remote.content));
     notifyConflict(task);
   }
-  const updated = await client.updateMemo(link.memo, { content });
-  await setNoteLink(task.id, linkFrom(updated, localHash, link));
+  const {
+    content: memoContent,
+    attachments,
+    ...sync
+  } = await imagesToMemo(
+    client,
+    content,
+    link,
+    remote,
+  );
+  const updated = await client.updateMemo(link.memo, {
+    content: memoContent,
+    attachments,
+  });
+  await setNoteLink(task.id, linkFrom(updated, localHash, sync, link));
 };
 
 /**
@@ -310,6 +362,10 @@ export const pullAll = async (): Promise<void> => {
         localUpdated: link.localEditedAt ?? 0,
       });
       if (decision === 'none') {
+        // Content unchanged, but images attached in Memos still go to SP.
+        if (hasNewImages(memo, link, client.baseUrl)) {
+          await applyRemote(client, settings, task, memo, link, false);
+        }
         continue;
       }
       if (decision === 'pushKeepRemote') {

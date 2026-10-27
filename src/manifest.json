@@ -1,7 +1,7 @@
 {
   "id": "memos",
   "name": "Memos",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "manifestVersion": 1,
   "minSupVersion": "19.2.0",
   "description": "Imports Memos with checkboxes as tasks and syncs task notes with Memos.",

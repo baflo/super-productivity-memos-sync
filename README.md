@@ -85,6 +85,31 @@ box in Memos completes the subtask on the next poll.
 - **Conflicts** (both sides changed): the newer side wins. The older version is
   kept as a comment on the memo.
 
+### Images
+
+Images pasted into the notes are synced too, at their position in the text.
+
+- Super Productivity keeps pasted images on the device only (browser storage,
+  or the clipboard image folder in the desktop app); the notes just refer to
+  them. The plugin uploads each image as an attachment of the memo and shows
+  it inline there (`/file/attachments/<id>/…`, so the memo does not depend on
+  Memos' host name).
+- Images added to the memo in Memos are downloaded into Super Productivity's
+  image storage and appear in the notes; images attached without a place in
+  the text are added at the end.
+- Removing an image from the notes removes the attachment in Memos.
+- Because Super Productivity's own sync carries the notes but not the images,
+  another device fetches missing images from Memos on the next pull of that
+  memo, or via **Save & sync now**.
+- An image whose notes were copied to another task (e.g. a duplicated task) is
+  uploaded once more for that task's memo: Memos binds an attachment to one
+  memo only.
+- Only images. Task attachments (Links & Files) are not synced.
+- The plugin reads and writes Super Productivity's image storage directly, as
+  there is no plugin API for it yet. In the desktop app it uses the default
+  image folder, or the folder seen in an image link of the notes; a custom
+  folder that no note links to is not found.
+
 ## Network
 
 - The issue provider uses Super Productivity's plugin HTTP helper.
